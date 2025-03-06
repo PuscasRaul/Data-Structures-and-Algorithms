@@ -1,3 +1,7 @@
+/*
+Să se determine distanța Euclideană între două locații identificate prin perechi de numere. De ex. distanța între (1,5) și (4,1) este 5.0
+*/
+
 #include <ctype.h>
 #include <math.h>
 #include <stddef.h>

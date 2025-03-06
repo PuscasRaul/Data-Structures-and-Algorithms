@@ -1,3 +1,7 @@
+/*
+Să se determine cuvintele unui text care apar exact o singură dată în acel text. De ex. cuvintele care apar o singură dată în ”ana are ana are mere rosii ana" sunt: 'mere' și 'rosii'
+*/
+
 #include <stddef.h>
 #include <time.h>
 #include <stdio.h>
