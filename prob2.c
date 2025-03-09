@@ -34,6 +34,7 @@ size_t extract_point(char *coordinates, double *return_value, size_t *offset) {
 		}	
 
 		// printf("%.2f ", value);
+		free(number);
 		++dimension;
 		return_value[*offset] = value;
 		++*offset;
