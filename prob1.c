@@ -93,39 +93,31 @@ size_t extract_word(char *line, size_t offset, char *word) {
 
 void compare(char *word, char *max) {
 	size_t i = 0;
-	for (i = 0; i < strlen(word) && i < strlen(max); i++) {
-
-		if (!isalpha(word[i]))
-				continue;
-
-		if (!isalpha(max[i]))
-			continue;
-
-		int cw = (int) tolower(word[i]);
-		int cm = (int) tolower(max[i]);
-
-		if (cw > cm){
-			memcpy(max, word, strlen(word)); // found a match early, we just switch em
+	for (i = 0; i < strlen(word) && i <strlen(max); i++) {
+		if (max[i] < word[i]) {
+			memcpy(max, word, strlen(word));
 			max[strlen(word)] = '\0';
 			return;
 		}
-	}
 
-	// we have letters left in word, which means we finished max
-	// and everything up to this was equal
-	// and so word comes after in the dictionary
+		if (max[i] > word[i]) {
+			return;
+		}
+	}
 
 	if (i < strlen(word)) {
 		memcpy(max, word, strlen(word));
 		max[strlen(word)] = '\0';
 	}
+
+	
 }
 
 char *algoritm(char *buffer) {
 	size_t len;
 	char word[256];
 	size_t offset = 0;
-	char *max = (char*) malloc(sizeof(char) * 256); 
+	char *max = (char*) calloc(256, sizeof(char)); 
 
 	if ((len = extract_word(buffer, offset, word))) {
 		offset += len;

@@ -2,7 +2,6 @@
 Să se determine distanța Euclideană între două locații identificate prin perechi de numere. De ex. distanța între (1,5) și (4,1) este 5.0
 */
 
-#include <ctype.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -16,32 +15,35 @@ Să se determine distanța Euclideană între două locații identificate prin p
 // compute the formula
 // easy peasy
 
-size_t extract_point(char *coordinates, int *return_value, size_t *offset) {
+size_t extract_point(char *coordinates, double *return_value, size_t *offset) {
 	size_t dimension = 0;
 	for (size_t i = 0; i < strlen(coordinates); ++i) {
-		int number = 0;
 		size_t start_point = i;
 
-		while (isdigit(coordinates[i])) {
-			number = number * 10 + ((int) coordinates[i] - 48);
+		while (coordinates[i] != ',') {
 			++i;
 		}	
+
+		char *number = malloc(sizeof(char) * (i - start_point + 1));
+		memcpy(number, &coordinates[start_point], i - start_point);
+		number[i - start_point] = '\0';
+		double value = strtod(number, NULL);
 		
 		if (i == start_point) {
 			continue;
 		}	
 
-		printf("%d ", number);
+		// printf("%.2f ", value);
 		++dimension;
-		return_value[*offset] = number;
+		return_value[*offset] = value;
 		++*offset;
 	}
 
-	printf("\ndimension: %ld\n", dimension);
+	// printf("\ndimension: %ld\n", dimension);
 	return dimension;
 }
 
-ssize_t parse_expression(char *expression, int *coordinates) {
+ssize_t parse_expression(char *expression, double *coordinates) {
 	// we can be sure
 	// unless some mf dumbass fucks it up and sends wrong format
 	// that expression[0] is a (
@@ -65,8 +67,8 @@ ssize_t parse_expression(char *expression, int *coordinates) {
 
 	char point[128];
 	memcpy(point, &expression[1], i-1); // copy until ) 
-	point[i] = '\0';
-	printf("%s\n", point);
+	point[i - 1] = '\0';
+	// printf("%s\n", point);
 	dimensions = extract_point(point, coordinates, &offset);	// i kinda interlaced
 																			// the words point coordinates
 																			// idk what each means anymore
@@ -81,8 +83,8 @@ ssize_t parse_expression(char *expression, int *coordinates) {
 		++i;
 
 	memcpy(point, &expression[nd_point + 1], i - nd_point - 1);
-	point[i - nd_point] = '\0';
-	printf("%s\n", point);
+	point[i - nd_point - 1] = '\0';
+	// printf("%s\n", point);
 
 	if (dimensions != extract_point(point, coordinates, &offset)) {
 		perror("dimensions do not match");
@@ -92,7 +94,7 @@ ssize_t parse_expression(char *expression, int *coordinates) {
 	return dimensions;
 }
 
-double_t compute_distance(int *coordinates, ssize_t dimension) {
+double_t compute_distance(double *coordinates, ssize_t dimension) {
 	double sum = 0;
 	for (size_t i = 0; i < dimension; i++) {
 
@@ -115,14 +117,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	
-	int coordinates[256];
+	double coordinates[256];
 	ssize_t dimensions;
 	dimensions = parse_expression(line, coordinates);
 	if (dimensions < 0) {
 		return 1;
 	}
 	
-	printf("distance: %f\n", compute_distance(coordinates, dimensions));
+	printf("distance: %.2f\n", compute_distance(coordinates, dimensions));
 
 	// printf("%s\n", line);
 	
